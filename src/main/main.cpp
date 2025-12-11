@@ -4,10 +4,26 @@
 #include <iostream>
 #include "SDL2/SDL.h"
 #include "GL/glew.h"
+#include <GLFW/glfw3.h>
+using namespace std;
 
-int main()
+int main(int argc, char *argv[])
 {
-    std::cout << "Hello World!\n";
+//Initialise glfw and the window as a objecy 
+    glfwInit();
+    GLFWwindow* window = glfwCreateWindow(1280, 720, "silver", NULL, NULL);
+    //success?
+    if (window = NULL) {
+        cout << "GLFW window did not instantiate\n";
+        glfwTerminate();
+        return -1;
+    }
+    glfwMakeContextCurrent(window);
+    glewInit();
+    glViewport(0,0,1280,720);
+    
+
+    return 0;
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
