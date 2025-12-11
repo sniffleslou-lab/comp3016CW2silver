@@ -1,41 +1,70 @@
-# Prerequisites
-*.d
+# --- Build folders ---
+build/
+build-*/
+out/
+bin/
+obj/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+*.cmake
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Linker files
-*.ilk
-
-# Debugger Files
-*.pdb
-
-# Compiled Dynamic libraries
+# --- Compiled binaries ---
+*.exe
+*.dll
 *.so
 *.dylib
-*.dll
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
 *.lib
+*.a
+*.o
 
-# Executables
-*.exe
-*.out
-*.app
+# --- Visual Studio ---
+.vs/
+*.vcxproj*
+*.sln
+*.pdb
+*.idb
+*.ipch
+*.opendb
+*.tlog
+*.obj
+*.log
+*.cache/
+*_i.c
+*_p.c
+*.db
+*.sbr
 
-# debug information files
-*.dwo
+# --- Visual Studio Code ---
+.vscode/
+*.code-workspace
+
+# --- vcpkg build artifacts ---
+vcpkg_installed/
+installed/
+packages/
+
+# --- CCache / Clang cache ---
+.ccache/
+.clangd/
+cache/
+
+# --- OS files ---
+.DS_Store
+Thumbs.db
+
+# --- Temporary files ---
+*.tmp
+*.temp
+*.log
+*.bak
+*.old
+
+# --- Editor-specific ---
+*.swp
+*.swo
+
+# --- Debug / crash dumps ---
+*.dSYM/
+*.stackdump
+*.core
