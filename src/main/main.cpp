@@ -6,7 +6,19 @@
 #include "GL/glew.h"
 #include <GLFW/glfw3.h>
 #include "main.h"
+#include <direct.h> 
+#include "LoadShaders.h"
 using namespace std;
+GLuint program;
+
+
+enum VAO_IDs {Triangles,Indices,Colours,Textures,NumVAOs= 2};
+//vao
+GLuint VAOs[NumVAOs];
+//buffer types and objects
+enum Buffers_IDs {ArraryBuffer, NumBuffers =4};
+GLuint Buffers[NumBuffers];
+
 
 int main(int argc, char* argv[])
 {
@@ -21,14 +33,43 @@ int main(int argc, char* argv[])
     }
     glfwMakeContextCurrent(window);
     glewInit();
+    //now we are loading the shaders
+    ShaderInfo shaders[] = {
+        {GL_VERTEX_SHADER, "../shaders/vertexShader.vert"},
+        {GL_FRAGMENT_SHADER, "../shaders/fragmentShader.frag"},
+        {GL_NONE, NULL}
+    };
+    program = LoadShaders(shaders);
+    glUseProgram(program);
+
     glViewport(0, 0, 1280, 720);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-    float verticles[] = {
+    float vertices[] = {
         -0.5f,-0.5f,0.0f, //pos 0. x,y,z
         0.5f,-0.5f,0.0f,//pos
         0.0f,0.0f,0.0f//pos 2
     };
+    //Sets index of VAO
+    glGenVertexArrays(NumVAOs, VAOs);
+    //Binds VAO to a buffer
+    glBindVertexArray(VAOs[0]);
+    //Sets indexes of all required buffer objects
+    glGenBuffers(NumBuffers, Buffers);
+
+    //Binds vertex object to array buffer
+    glBindBuffer(GL_ARRAY_BUFFER, Buffers[Triangles]);
+    //Allocates buffer memory for the vertices of the 'Triangles' buffer
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    //Allocates vertex attribute memory for vertex shader
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    //Index of vertex attribute for vertex shader
+    glEnableVertexAttribArray(0);
+
+    //Unbinding
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
     //now the render loop
     while (glfwWindowShouldClose(window) == false)
     {
