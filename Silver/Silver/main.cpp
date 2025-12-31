@@ -38,8 +38,8 @@ int main(int argc, char* argv[])
     glewInit();
     //now we are loading the shaders
     ShaderInfo shaders[] = {
-        {GL_VERTEX_SHADER, "../shaders/vertexShader.vert"},
-        {GL_FRAGMENT_SHADER, "../shaders/fragmentShader.frag"},
+        {GL_VERTEX_SHADER, "../../shaders/vertexShader.vert"},
+        {GL_FRAGMENT_SHADER, "../../shaders/fragmentShader.frag"},
         {GL_NONE, NULL}
     };
     program = LoadShaders(shaders);
@@ -77,14 +77,21 @@ int main(int argc, char* argv[])
     while (glfwWindowShouldClose(window) == false)
     {
         ProcessUserInput(window); //takes userinput
+        glUseProgram(program);
         //renders
         glClearColor(0.25f, 0.0f, 1.0f, 1.0f);// COLOUR TO DISPLAY
         glClear(GL_COLOR_BUFFER_BIT);//CLEARS THE COLOUR
+
+        glBindVertexArray(VAOs[0]);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+
         //refreshes
         glfwSwapBuffers(window);//swaps buffer colour
         glfwPollEvents();
-    }
+        //shader
 
+    }
+    glfwTerminate();
 
     return 0;
 }
