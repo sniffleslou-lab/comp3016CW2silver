@@ -8,6 +8,8 @@
 #include "main.h"
 #include <direct.h> 
 #include "LoadShaders.h"
+#include "Camera.h"
+
 using namespace std;
 GLuint program;
 
@@ -36,6 +38,14 @@ int main(int argc, char* argv[])
     }
     glfwMakeContextCurrent(window);
     glewInit();
+
+    //camera 
+    //--
+    Camera camera(glm::vec3(0.0f, 1.0f, 3.0f));
+    float lastFrame = 0.0f;
+    float deltaTime = 0.0f;
+    //--
+    
     //now we are loading the shaders
     ShaderInfo shaders[] = {
         {GL_VERTEX_SHADER, "../../shaders/vertexShader.vert"},
@@ -93,7 +103,23 @@ int main(int argc, char* argv[])
         //refreshes
         glfwSwapBuffers(window);//swaps buffer colour
         glfwPollEvents();
-        //shader
+        
+        //camera
+        // --
+        float currentFrame = glfwGetTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+        //
+
+        //movement
+        //--
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) camera.ProcessKeyboard('W', deltaTime);
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) camera.ProcessKeyboard('S', deltaTime);
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) camera.ProcessKeyboard('A', deltaTime);
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) camera.ProcessKeyboard('D', deltaTime);
+
+        //
+
 
     }
     glfwTerminate();
