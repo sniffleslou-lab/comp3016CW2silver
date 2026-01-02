@@ -49,9 +49,14 @@ int main(int argc, char* argv[])
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
     float vertices[] = {
-        -0.5f,-0.5f,0.0f, //pos 0. x,y,z
-        0.5f,-0.5f,0.0f,//pos
-        0.0f,0.0f,0.0f//pos 2
+        -0.5f, 0.0f,-0.5f, //pos 0. x,y,z
+         0.5f, 0.0f,-0.5f,//pos
+        -0.5f, 0.0f, 0.5f,//pos 2
+
+        //from my understanding to make this a plain
+        0.5f, 0.0f, -0.5f, //pos 0. x,y,z
+        0.5f, 0.0f, 0.5f,//pos
+       -0.0f, 0.0f, 0.5f//pos 2
     };
     //Sets index of VAO
     glGenVertexArrays(NumVAOs, VAOs);
@@ -83,7 +88,7 @@ int main(int argc, char* argv[])
         glClear(GL_COLOR_BUFFER_BIT);//CLEARS THE COLOUR
 
         glBindVertexArray(VAOs[0]);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
 
         //refreshes
         glfwSwapBuffers(window);//swaps buffer colour
