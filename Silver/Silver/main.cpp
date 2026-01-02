@@ -9,6 +9,9 @@
 #include <direct.h> 
 #include "LoadShaders.h"
 #include "Camera.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 using namespace std;
 GLuint program;
@@ -21,6 +24,28 @@ GLuint VAOs[NumVAOs];
 //buffer types and objects
 enum Buffers_IDs { ArraryBuffer, NumBuffers = 4 };
 GLuint Buffers[NumBuffers];
+
+///mouse callback
+///------
+float lastX = 640;
+float lastY = 360;
+Camera camera(glm::vec3(0.0f, 1.0f, 3.0f));
+bool firstMouse = true;
+//mouse callback
+void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
+    if (firstMouse) {
+        lastX = xpos;
+        lastY = ypos;  
+        firstMouse = false;
+    }
+    float xoffset = xpos - lastX;
+    float yoffset = lastY - ypos;
+    lastX = xpos;
+    lastY = ypos;
+
+    camera.ProcessMouseMovement(xoffset, yoffset);
+}
+/// -----
 
 
 int main(int argc, char* argv[])
@@ -38,10 +63,14 @@ int main(int argc, char* argv[])
     }
     glfwMakeContextCurrent(window);
     glewInit();
-
+    //mouse
+    // --
+    glfwSetCursorPosCallback(window, mouse_callback);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    // --
     //camera 
     //--
-    Camera camera(glm::vec3(0.0f, 1.0f, 3.0f));
+    //Camera camera(glm::vec3(0.0f, 1.0f, 3.0f));
     float lastFrame = 0.0f;
     float deltaTime = 0.0f;
     //--
@@ -59,14 +88,14 @@ int main(int argc, char* argv[])
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
     float vertices[] = {
-        -0.5f, 0.0f,-0.5f, //pos 0. x,y,z
+        -0.5f, 0.0f, -0.5f, //pos 0. x,y,z
          0.5f, 0.0f,-0.5f,//pos
         -0.5f, 0.0f, 0.5f,//pos 2
 
         //from my understanding to make this a plain
         0.5f, 0.0f, -0.5f, //pos 0. x,y,z
         0.5f, 0.0f, 0.5f,//pos
-       -0.0f, 0.0f, 0.5f//pos 2
+       -0.5f, 0.0f, 0.5f//pos 2
     };
     //Sets index of VAO
     glGenVertexArrays(NumVAOs, VAOs);
@@ -93,6 +122,15 @@ int main(int argc, char* argv[])
     {
         ProcessUserInput(window); //takes userinput
         glUseProgram(program);
+        //camera matrices
+        glm::mat4 view = camera.GetViewMatrix();
+        glm::mat4 projection = glm::perspective(glm::radians(45.0f), 1280.0f / 720.0f, 0.1f, 100.0f);
+        unsigned int viewLoc = glGetUniformLocation(program, "view");
+        unsigned int projLoc = glGetUniformLocation(program, "projection");
+        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+        glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+
+
         //renders
         glClearColor(0.25f, 0.0f, 1.0f, 1.0f);// COLOUR TO DISPLAY
         glClear(GL_COLOR_BUFFER_BIT);//CLEARS THE COLOUR
@@ -117,7 +155,6 @@ int main(int argc, char* argv[])
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) camera.ProcessKeyboard('S', deltaTime);
         if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) camera.ProcessKeyboard('A', deltaTime);
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) camera.ProcessKeyboard('D', deltaTime);
-
         //
 
 
