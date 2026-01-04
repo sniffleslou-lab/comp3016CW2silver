@@ -95,14 +95,14 @@ int main(int argc, char* argv[])
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
     float vertices[] = {
-        -0.5f, 0.0f, -0.5f, //pos 0. x,y,z
-         0.5f, 0.0f,-0.5f,//pos
-        -0.5f, 0.0f, 0.5f,//pos 2
+        -0.5f, 0.0f, -0.5f,     0.0f, 0.0f,
+         0.5f, 0.0f,-0.5f,      1.0f, 0.0f,
+        -0.5f, 0.0f, 0.5f,      0.0f, 1.0f,
 
         //from my understanding to make this a plain
-        0.5f, 0.0f, -0.5f, //pos 0. x,y,z
-        0.5f, 0.0f, 0.5f,//pos
-       -0.5f, 0.0f, 0.5f//pos 2
+        0.5f, 0.0f, -0.5f,      1.0f, 0.0f,
+        0.5f, 0.0f, 0.5f,       1.0f, 1.0f,
+       -0.5f, 0.0f, 0.5f,       0.0f, 1.0f
     };
     //Sets index of VAO
     glGenVertexArrays(NumVAOs, VAOs);
@@ -117,9 +117,12 @@ int main(int argc, char* argv[])
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     //Allocates vertex attribute memory for vertex shader
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    //Index of vertex attribute for vertex shader
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+    //plain texture
+    GLuint grassTexture = LoadTexture("../../assets/grass.png");
 
     //Unbinding
     glBindVertexArray(0);
@@ -142,7 +145,11 @@ int main(int argc, char* argv[])
         glClearColor(0.25f, 0.0f, 1.0f, 1.0f);// COLOUR TO DISPLAY
         glClear(GL_COLOR_BUFFER_BIT);//CLEARS THE COLOUR
 
-        glUniform1i(glGetUniformLocation(program, "useTexture"), false);
+        glUniform1i(glGetUniformLocation(program, "useTexture"), true);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, grassTexture);
+        glUniform1i(glGetUniformLocation(program, "texture1"), 0);
+        //glUniform1i(glGetUniformLocation(program, "useTexture"), false);
         glBindVertexArray(VAOs[0]);
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
@@ -152,12 +159,11 @@ int main(int argc, char* argv[])
         signature.Draw(program, signatureTexture, model);
 
         //cube 
-        glm::mat4 cubeModel = glm::mat4(1.0f);
-        cubeModel = glm::translate(cubeModel, glm::vec3(0.0f, 1.0f, -3.0f));
-        cubeModel = glm::rotate(cubeModel, (float)glfwGetTime(), glm::vec3(0, 1, 0));
-        glUniform1i(glGetUniformLocation(program, "useTexture"), false);
-
-
+        //glm::mat4 cubeModel = glm::mat4(1.0f);
+        //cubeModel = glm::translate(cubeModel, glm::vec3(0.0f, 1.0f, -3.0f));
+        //cubeModel = glm::rotate(cubeModel, (float)glfwGetTime(), glm::vec3(0, 1, 0));
+        //glUniform1i(glGetUniformLocation(program, "useTexture"), false);
+       
 
         //refreshes
         glfwSwapBuffers(window);//swaps buffer colour
