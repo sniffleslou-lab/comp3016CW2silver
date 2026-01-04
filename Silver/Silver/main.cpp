@@ -12,6 +12,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "Signature.h"
+#include "TextureLoader.h"
 
 using namespace std;
 GLuint program;
@@ -74,6 +76,11 @@ int main(int argc, char* argv[])
     float lastFrame = 0.0f;
     float deltaTime = 0.0f;
     //--
+    //Signature
+    //--    
+    Signature signature; 
+    GLuint signatureTexture = LoadTexture("../../assets/signature.png");
+    //--
     
     //now we are loading the shaders
     ShaderInfo shaders[] = {
@@ -135,8 +142,22 @@ int main(int argc, char* argv[])
         glClearColor(0.25f, 0.0f, 1.0f, 1.0f);// COLOUR TO DISPLAY
         glClear(GL_COLOR_BUFFER_BIT);//CLEARS THE COLOUR
 
+        glUniform1i(glGetUniformLocation(program, "useTexture"), false);
         glBindVertexArray(VAOs[0]);
         glDrawArrays(GL_TRIANGLES, 0, 6);
+
+        //signature
+        glUniform1i(glGetUniformLocation(program, "useTexture"), true);
+        glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(3.0f, 1.5f, 1.0f));
+        signature.Draw(program, signatureTexture, model);
+
+        //cube 
+        glm::mat4 cubeModel = glm::mat4(1.0f);
+        cubeModel = glm::translate(cubeModel, glm::vec3(0.0f, 1.0f, -3.0f));
+        cubeModel = glm::rotate(cubeModel, (float)glfwGetTime(), glm::vec3(0, 1, 0));
+        glUniform1i(glGetUniformLocation(program, "useTexture"), false);
+
+
 
         //refreshes
         glfwSwapBuffers(window);//swaps buffer colour
@@ -157,6 +178,7 @@ int main(int argc, char* argv[])
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) camera.ProcessKeyboard('D', deltaTime);
         //
 
+        
 
     }
     glfwTerminate();
@@ -174,14 +196,3 @@ void ProcessUserInput(GLFWwindow* WindowIn) {
         glfwSetWindowShouldClose(WindowIn, true);
     }
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
