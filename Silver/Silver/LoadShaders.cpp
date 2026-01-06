@@ -9,7 +9,6 @@
 extern "C" {
 #endif // __cplusplus
 
-	//----------------------------------------------------------------------------
 
 	static const GLchar*
 		ReadShader(const char* filename)
@@ -40,7 +39,7 @@ extern "C" {
 		return const_cast<const GLchar*>(source);
 	}
 
-	//----------------------------------------------------------------------------
+	
 
 	GLuint
 		LoadShaders(ShaderInfo* shaders)
@@ -117,7 +116,6 @@ extern "C" {
 		return program;
 	}
 
-	//----------------------------------------------------------------------------
 #ifdef __cplusplus
 }
 #endif 
