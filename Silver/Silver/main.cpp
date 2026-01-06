@@ -47,7 +47,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
 
     camera.ProcessMouseMovement(xoffset, yoffset);
 }
-/// -----
+/// ----------
 
 
 int main(int argc, char* argv[])
